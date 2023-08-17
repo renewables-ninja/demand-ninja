@@ -1,0 +1,2 @@
+include README.md LICENSE pyproject.toml requirements.txt
+include demand_ninja/diurnal_profiles.csv

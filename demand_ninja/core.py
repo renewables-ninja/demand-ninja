@@ -15,7 +15,7 @@ def _beti(
     weather: pd.DataFrame,
     smoothing: float,
     solar_gains: float,
-    wind_discomfort: float,
+    wind_chill: float,
     humidity_discomfort: float,
 ) -> pd.Series:
 
@@ -40,7 +40,7 @@ def _beti(
     N = N + (weather["radiation_global_horizontal"] - setpoint_S) * solar_gains
 
     # If it's windy, it feels colder
-    N = N + (weather["wind_speed_2m"] - setpoint_W) * wind_discomfort
+    N = N + (weather["wind_speed_2m"] - setpoint_W) * wind_chill
 
     # If it's humid, both hot and cold feel more extreme
     discomfort = N - setpoint_T
@@ -137,7 +137,7 @@ def demand(
     cooling_power: float = 0.15,
     smoothing: float = 0.5,
     solar_gains: float = 0.012,
-    wind_discomfort: float = -0.20,
+    wind_chill: float = -0.20,
     humidity_discomfort: float = 0.05,
     use_diurnal_profile: bool = True,
     raw: bool = False,
@@ -169,7 +169,7 @@ def demand(
         daily_inputs,
         smoothing,
         solar_gains,
-        wind_discomfort,
+        wind_chill,
         humidity_discomfort,
     )
 

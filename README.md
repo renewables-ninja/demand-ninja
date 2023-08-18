@@ -28,7 +28,7 @@ See [CHANGELOG.md](CHANGELOG.md).
 
 ## Credits and contact
 
-Contact [Iain Staffell](i.staffell@imperial.ac.uk) and [Nathan Johnson](nathan.johnson17@imperial.ac.uk) if you have questions about Demand.ninja.  Demand.ninja is a component of the [Renewables.ninja](https://renewables.ninja) project, developed by Stefan Pfenninger and Iain Staffell.
+Contact [Iain Staffell](mailto:i.staffell@imperial.ac.uk) and [Nathan Johnson](mailto:nathan.johnson17@imperial.ac.uk) if you have questions about Demand.ninja.  Demand.ninja is a component of the [Renewables.ninja](https://renewables.ninja) project, developed by Stefan Pfenninger and Iain Staffell.
 
 ## Citation
 

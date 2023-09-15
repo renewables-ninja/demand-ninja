@@ -11,7 +11,7 @@ DIURNAL_PROFILES = pd.read_csv(
 )
 
 
-def _beti(
+def _bait(
     weather: pd.DataFrame,
     smoothing: float,
     solar_gains: float,
@@ -59,7 +59,7 @@ def _beti(
     # we assume 2nd day smoothing is the square of the first day (i.e. compounded decay)
     N = smooth_temperature(N, weights=[smoothing, smoothing**2])
 
-    # Blend the smoothed BETI with raw temperatures to account for occupant
+    # Blend the smoothed BAIT with raw temperatures to account for occupant
     # behaviour changing with the weather (i.e. people open windows when it's hot)
 
     # These are fixed parameters we don't expose the user to
@@ -79,8 +79,8 @@ def _beti(
     return N
 
 
-def _energy_demand_from_beti(
-    beti: pd.Series,
+def _energy_demand_from_bait(
+    bait: pd.Series,
     heating_threshold: float,
     cooling_threshold: float,
     base_power: float,
@@ -92,7 +92,7 @@ def _energy_demand_from_beti(
     Convert temperatures into energy demand.
 
     """
-    output = pd.DataFrame(index=beti.index.copy())
+    output = pd.DataFrame(index=bait.index.copy())
     output["hdd"] = 0
     output["cdd"] = 0
     output["heating_demand"] = 0
@@ -101,12 +101,12 @@ def _energy_demand_from_beti(
 
     # Add demand for heating
     if heating_power > 0:
-        output["hdd"] = get_hdd(beti, heating_threshold)
+        output["hdd"] = get_hdd(bait, heating_threshold)
         output["heating_demand"] = output["hdd"] * heating_power
 
     # Add demand for cooling
     if cooling_power > 0:
-        output["cdd"] = get_cdd(beti, cooling_threshold)
+        output["cdd"] = get_cdd(bait, cooling_threshold)
         output["cooling_demand"] = output["cdd"] * cooling_power
 
     # Apply the diurnal profiles if wanted
@@ -145,7 +145,7 @@ def demand(
     """
     Returns a pd.DataFrame of heating_demand, cooling_demand, and total_demand. If
     `raw` is True (default False), then also returns the input data and the
-    intermediate BETI.
+    intermediate BAIT.
 
     Params
     ------
@@ -164,8 +164,8 @@ def demand(
 
     daily_inputs = hourly_inputs.resample("1D").mean()
 
-    # Calculate BETI
-    daily_beti = _beti(
+    # Calculate BAIT
+    daily_bait = _bait(
         daily_inputs,
         smoothing,
         solar_gains,
@@ -173,19 +173,19 @@ def demand(
         humidity_discomfort,
     )
 
-    # Upsample BETI to hourly
-    daily_beti.index = pd.date_range(
-        daily_beti.index[0] + pd.Timedelta("12H"),
-        daily_beti.index[-1] + pd.Timedelta("12H"),
+    # Upsample BAIT to hourly
+    daily_bait.index = pd.date_range(
+        daily_bait.index[0] + pd.Timedelta("12H"),
+        daily_bait.index[-1] + pd.Timedelta("12H"),
         freq="1D",
     )
-    hourly_inputs["beti"] = daily_beti.reindex(hourly_inputs.index).interpolate(
+    hourly_inputs["bait"] = daily_bait.reindex(hourly_inputs.index).interpolate(
         method="cubicspline", limit_direction="both"
     )
 
     # Transform to degree days and energy demand
-    result = _energy_demand_from_beti(
-        hourly_inputs["beti"],
+    result = _energy_demand_from_bait(
+        hourly_inputs["bait"],
         heating_threshold,
         cooling_threshold,
         base_power,

@@ -50,7 +50,7 @@ def _bait(
         + (
             discomfort
             # Convert humidity from g/kg to kg/kg
-            * ((weather["humidity"] / 1000) - setpoint_H)
+            * (weather["humidity"] - setpoint_H) / 1000
             * humidity_discomfort
         )
     )
